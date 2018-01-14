@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+			<!--网页图标代码-->
+			<!--<link rel="icon" href="aa.ico" type="image/x-icon" />
+			<link rel="shortcut icon" href="aa.ico">
+			<link rel="Bookmark" href="aa.ico">-->
+		<link rel="shortcut icon" type="image/x-icon" href="images/hh.jpg">
+		<title>CSS3 3D立方体图片墙DEMO演示</title>
+		<style>
+			h3 {
+				text-align: center;
+				color: #5A5A5A;
+			}
+			
+			body {
+				background: #000;
+			}
+			
+			#box {
+				width: 200px;
+				height: 200px;
+				margin: 150px auto;
+				background: #ccc;
+				position: relative;
+				transform: perspective(800px) rotateY(-60deg) rotateX(45deg);
+				transform-style: preserve-3d;
+				/*transition:all 3s linear;*/
+			}
+			
+			#box div {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				background-size: cover;
+				-webkit-box-shadow: 0 0 100px #5fbcff;
+				opacity: .8;
+			}
+			
+			.front {
+				transform: translateZ(100px);
+				background: url(images/3.jpg);
+			}
+			
+			.back {
+				transform: translateZ(-100px);
+				background: url(images/a1.png);
+			}
+			
+			.left {
+				transform: translateX(-100px) rotateY(90deg);
+				background: url(images/4.jpg);
+			}
+			
+			.right {
+				transform: translateX(100px) rotateY(90deg);
+				background: url(images/5.jpg);
+			}
+			
+			.top {
+				transform: translateY(-100px) rotateX(90deg);
+				background: url(images/d.jpg);
+			}
+			
+			.bottom {
+				transform: translateY(100px) rotateX(90deg);
+				background: url(images/mm.jpg);
+			}
+			
+			.btn{
+				list-style: none;
+				margin:0;
+				padding:0;
+				width:100px;
+				height:300px;
+				position: absolute;
+				top:200px;
+				left:100px;
+			}
+			.btn li{
+				width:100px;
+				height:50px;
+			}
+			
+			.bg{
+				background:pink;
+			}
+			
+		</style>
+		<script src="js/jquery.min.js"></script>
+		<script>
+			window.onload = function() {
+				var oBox = document.querySelector('#box');
+
+				var y = 0;
+				var x = 0;
+				oBox.onmousedown = function(ev) {
+					var oEvent = ev || event;
+					var disX = oEvent.clientX - y;
+					var disY = oEvent.clientY - x;
+					document.onmousemove = function(ev) {
+						var oEvent = ev || event;
+						x = oEvent.clientY - disY;
+						y = oEvent.clientX - disX;
+						
+						//当box的位置移动时
+						
+						oBox.style.transform = 'perspective(800px) rotateX(' + x + 'deg) rotateY(' + y + 'deg)';
+						//oBox.style.transition = 'all  3s linear';
+						
+					};
+					document.onmouseup = function() {
+						document.onmousemove = null;
+						document.onmouseup = null;
+					};
+					return false;
+				};
+				
+			};
+			
+			/*jq测试*/
+
+			$(function(){
+				
+				var x = 0;
+				var y = 0;
+				var timer1 = 0;
+				var timer2 = 0;
+				var timer3 = 0;
+				var timer4 = 0;
+				var arr = ["水平转动","垂直转动","双向转动","角度转动"];
+				
+			//水平转动
+			
+				$('.sp').click(function(){
+					clearInterval(timer2);
+					clearInterval(timer3);
+					clearInterval(timer4);
+					$('.btn').find('.zd').each(function(index){
+						$(this).val(arr[index]);
+					})
+					if(timer1 != 0){
+						clearInterval(timer1);
+						timer1 = 0;
+						$(this).val('水平转动');
+						return;
+
+					}else{
+						$(this).val('停止转动');
+					}
+					timer1 = setInterval(function(){
+
+						++x;
+						if(x>360){
+							x=0
+						}
+						
+						$('#box').css({
+							'transform':'perspective(800px) rotateY('+x+'deg)'
+						})
+						//console.log(x);
+						
+					},10)
+					
+					console.log(timer1);
+				})
+				console.log(timer1);
+			
+			
+			//垂直转动
+			$('.cz').click(function(){
+				clearInterval(timer1);
+				clearInterval(timer3);
+				clearInterval(timer4);
+				$('.btn').find('.zd').each(function(index){
+						$(this).val(arr[index]);
+					})
+				if(timer2 != 0){
+						clearInterval(timer2);
+						timer2 = 0;
+						$(this).val('垂直转动');
+						return;
+
+					}else{
+						$(this).val('停止转动');
+					}
+				timer2 = setInterval(function(){
+					++y;
+					if(y>360){
+						y=0
+					}
+					$('#box').css({
+						'transform':'perspective(800px) rotateX('+y+'deg)'
+					})
+				},10)
+				
+			})
+			
+			
+			//双向转动
+			$('.sx').click(function(){
+				clearInterval(timer1);
+				clearInterval(timer2);
+				clearInterval(timer4);
+				$('.btn').find('.zd').each(function(index){
+						$(this).val(arr[index]);
+					})
+				if(timer3 != 0){
+						clearInterval(timer3);
+						timer3 = 0;
+						$(this).val('双向转动');
+						return;
+
+					}else{
+						$(this).val('停止转动');
+					}
+				timer3 = setInterval(function(){
+					x+=3;
+					y+=2;
+					if(y>360){
+						y=0
+					}
+					if(x>360){
+						x=0
+					}
+					$('#box').css({
+						'transform':'perspective(800px) rotateX('+y+'deg) rotateY('+x+'deg)'
+					})
+				},30)
+			})
+			
+			/*角度转动*/
+			var a = -360;
+			var b = -720;
+			$('.jd').click(function(){
+				clearInterval(timer1);
+				clearInterval(timer3);
+				clearInterval(timer2);
+				
+				$('.btn').find('.zd').each(function(index){
+						$(this).val(arr[index]);
+					})
+				
+				if(timer4 != 0){
+						clearInterval(timer4);
+						timer4 = 0;
+						$(this).val('角度转动');
+						return;
+
+					}else{
+						$(this).val('停止转动');
+					}
+				timer4 = setInterval(function(){
+					a+=3;
+					b+=3;
+					$('#box').css({
+						'transform':'perspective(800px) rotateX('+a+'deg) rotateY('+b+'deg)'
+						
+					})
+				},30)
+			})
+			
+			/*点击改变背景色*/
+			
+			$('.btn li input').click(function(){
+				$('.btn li input').removeClass('bg');
+				$(this).addClass('bg');
+			})
+			
+			//循环遍历关闭所有的定时器
+			var timerArr = [timer1,timer2,timer3,timer4];
+			$('.stop').click(function(){
+					clearInterval(timer1);
+					clearInterval(timer2);
+					clearInterval(timer3);
+					clearInterval(timer4);
+					
+					//循环遍历各个需要转动的按钮
+					$('.btn').find('.zd').each(function(index){
+						$(this).val(arr[index]);
+					})
+			})
+			
+			//停止转动
+			
+			/*function stop(){
+				$('.stop').click(function(){
+					if(timer != 0){
+						clearInterval(timer);
+						timer = 0;
+						return;
+					}else{
+						setInterval(timer);
+					}
+				})
+			}
+			*/
+			/*function stop(){
+				if(timer != 0){
+					$('.stop').click(function(){
+						clearInterval(timer);
+						timer = 0;
+						console.log(timer);
+						return;
+					})
+				}
+			}*/
+			
+		})
+		
+		
+		</script>
+	</head>
+
+	<body>
+		<h3>按住鼠标左键拖动</h3>
+		<div id="box">
+			<div class="front"></div>
+			<div class="back"></div>
+			<div class="top"></div>
+			<div class="bottom"></div>
+			<div class="left"></div>
+			<div class="right"></div>
+		</div>
+
+		<div style="text-align:center;clear:both">
+			<!--<script src="/gg_bd_ad_720x90.js" type="text/javascript"></script>
+			<script src="/follow.js" type="text/javascript"></script>-->
+			<ul class="btn">
+				<li><input type="button" class="sp zd" value="水平转动" /></li>
+				<li><input type="button" class="cz zd" value="垂直转动" /></li>
+				<li><input type="button" class="sx zd" value="双向转动" /></li>
+				<li><input type="button" class="jd zd" value="角度转动" /></li>
+				<li><input type="button" class="stop" value="停止转动" /></li>
+			</ul>
+			
+		</div>
+	</body>
+
+</html>
